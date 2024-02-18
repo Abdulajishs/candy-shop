@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import ItemForm from "./components/ProductInput/ItemForm";
+import ListItem from "./components/ProductList/ListItem";
+import Header from "./components/Header/Header";
+import CartProvider from "./store/CartProvider";
+import Cart from "./components/Cart/Cart";
+
 
 function App() {
+  const [listItem,setListItem] = useState([]);
+  const [showCart,setShowcart] = useState(false);
+
+  const addItemHandler= (id,name,description,price)=>{
+    setListItem(prevListItem => {
+      return [...prevListItem,{id,name,description,price}]
+    })
+  }
+
+  const showCartHandler = () =>{
+    setShowcart(true)
+  }
+
+  const hideCartHandler = () =>{
+    setShowcart(false)
+  }
+  // console.log(listItem);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CartProvider>
+       {showCart && <Cart onClose={hideCartHandler} /> } 
+      <Header onShowCart={showCartHandler} />
+      <ItemForm onAddItem={addItemHandler} />
+      <ListItem items={listItem} />
+    </CartProvider>
   );
 }
 
